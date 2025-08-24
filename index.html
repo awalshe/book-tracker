@@ -6,85 +6,73 @@
   <title>Liquid Glass Reading Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Theme Variables */
+    /* Base Styles */
     :root {
-      --bg-gradient: linear-gradient(135deg, #12092a, #3a1d6b, #6a3a9a, #928dab);
-      --glass-bg: rgba(255, 255, 255, 0.08);
+      --primary: #8b5cf6;
+      --primary-light: #a78bfa;
+      --text: #1f2937;
+      --bg-light: #f9fafb;
+      --bg-dark: #111827;
+      --border: rgba(156, 163, 175, 0.2);
+      --glass-bg: rgba(255, 255, 255, 0.1);
       --glass-hover: rgba(255, 255, 255, 0.15);
-      --text: #ffffff;
-      --accent: #bb86fc;
-      --star-full: #fbbf24;
-      --star-empty: rgba(255, 255, 255, 0.4);
-      --border-light: rgba(255, 255, 255, 0.1);
-      --shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       --transition: all 0.3s ease;
-      --input-bg: rgba(255, 255, 255, 0.1);
-      --header-bg: rgba(0, 0, 0, 0.2);
-    }
-
-    /* Light Mode Theme */
-    .light-mode {
-      --bg-gradient: linear-gradient(135deg, #f0f4f8, #d9e2ec, #e4d5f0);
-      --glass-bg: rgba(255, 255, 255, 0.7);
-      --glass-hover: rgba(255, 255, 255, 0.85);
-      --text: #222;
-      --accent: #6a3a9a;
-      --star-full: #eab308;
-      --star-empty: #ccc;
-      --border-light: rgba(0, 0, 0, 0.1);
-      --input-bg: rgba(0, 0, 0, 0.05);
-      --header-bg: rgba(0, 0, 0, 0.1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      --star-empty: #d1d5db;
+      --star-full: #fbbf24;
     }
 
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: var(--bg-gradient);
-      background-size: 400% 400%;
-      animation: gradientShift 12s ease infinite;
+      background: var(--bg-light);
+      color: var(--text);
       min-height: 100vh;
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: var(--text);
-      overflow-x: hidden;
       transition: background 0.5s ease;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: #e5e7eb;
     }
 
-    /* Title & Controls */
-    header {
+    .container {
       width: 100%;
       max-width: 1200px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    body.dark-mode header {
+      background: var(--bg-dark);
     }
 
     h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
+      font-size: 1.8rem;
       font-weight: 700;
+      color: var(--primary);
+      margin: 0;
       letter-spacing: -0.5px;
-      background: linear-gradient(to right, var(--accent), #e4d5f0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .controls {
@@ -94,49 +82,36 @@
     }
 
     .search-input {
-      padding: 0.6rem 1rem;
-      width: 200px;
-      max-width: 100%;
-      border: 1px solid var(--border-light);
-      border-radius: 12px;
-      background: var(--input-bg);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    body.dark-mode .search-input {
+      background: var(--bg-dark);
+      color: #e5e7eb;
     }
 
     .theme-toggle {
-      background: var(--accent);
-      color: #121212;
+      background: var(--primary);
+      color: white;
       border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
-      transition: transform 0.2s;
+      font-size: 0.9rem;
+      transition: var(--transition);
     }
 
     .theme-toggle:hover {
       transform: scale(1.05);
-    }
-
-    /* Main Container */
-    .glass-container {
-      width: 100%;
-      max-width: 1200px;
-      background: var(--glass-bg);
-      border-radius: 24px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-light);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 0;
-      transition: var(--transition);
-    }
-
-    .glass-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      background: var(--primary-light);
     }
 
     table {
@@ -146,84 +121,69 @@
     }
 
     th {
-      padding: 1rem;
       text-align: left;
+      padding: 1rem 1.5rem;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: var(--accent);
-      background: var(--header-bg);
-      backdrop-filter: blur(5px);
+      color: var(--primary);
+      background: var(--bg-light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    body.dark-mode th {
+      background: var(--bg-dark);
     }
 
     td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-light);
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
       transition: var(--transition);
     }
 
-    tr {
-      opacity: 1;
-      transition: opacity 0.2s, transform 0.2s;
+    tr:hover {
+      background: var(--glass-hover);
+      transform: translateX(2px);
     }
 
-    tr.hidden {
-      opacity: 0;
-      transform: translateY(-10px);
-      height: 0;
-      padding: 0;
-      border: none;
-      display: none;
-    }
-
-    tr:hover:not(.hidden) {
-      background: rgba(255, 255, 255, 0.05);
-      transform: scale(1.005);
-    }
-
-    /* Checkbox Styling */
     .checkbox-container {
       display: flex;
+      align-items: center;
       justify-content: center;
-    }
-
-    input[type="checkbox"] {
-      appearance: none;
       width: 24px;
       height: 24px;
-      border-radius: 8px;
-      border: 2px solid var(--accent);
-      background: transparent;
+      border: 1px solid var(--primary);
+      border-radius: 50%;
       cursor: pointer;
-      position: relative;
       transition: var(--transition);
     }
 
-    input[type="checkbox"]:checked {
-      background: var(--accent);
+    .checkbox-container:hover {
+      background: var(--primary);
+      border-color: var(--primary);
     }
 
-    input[type="checkbox"]:after {
+    .checkbox-container.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .checkbox-container.checked::after {
       content: "✓";
-      position: absolute;
-      color: #121212;
+      color: white;
       font-weight: bold;
       font-size: 14px;
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      opacity: 0;
     }
 
-    input[type="checkbox"]:checked:after {
-      opacity: 1;
-    }
-
-    /* Star Rating */
     .rating {
       display: flex;
-      gap: 4px;
+      gap: 0.3rem;
     }
 
     .rating input {
@@ -231,7 +191,7 @@
     }
 
     .rating label {
-      font-size: 1.3rem;
+      font-size: 0.9rem;
       color: var(--star-empty);
       cursor: pointer;
       transition: color 0.2s;
@@ -243,156 +203,66 @@
       color: var(--star-full);
     }
 
-    /* Input Fields */
-    input[type="number"] {
-      width: 60px;
-      padding: 0.4rem 0.6rem;
-      border-radius: 8px;
-      border: 1px solid var(--border-light);
-      background: var(--input-bg);
+    .pages {
+      font-size: 0.9rem;
       color: var(--text);
-      text-align: center;
-      font-size: 0.95rem;
     }
 
     textarea {
       width: 100%;
-      background: var(--input-bg);
-      border: 1px solid var(--border-light);
-      border-radius: 10px;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
       color: var(--text);
-      padding: 0.6rem;
       resize: vertical;
-      min-height: 40px;
-      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
       transition: var(--transition);
+    }
+
+    body.dark-mode textarea {
+      background: var(--bg-dark);
+      color: #e5e7eb;
     }
 
     textarea:focus {
       outline: none;
-      border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.3);
+      border-color: var(--primary);
+      background: var(--glass-bg);
     }
 
     ::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--border);
       font-style: italic;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-      h1 { font-size: 2rem; }
-
-      .controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .search-input, .theme-toggle {
-        width: 100%;
-      }
-
-      .glass-container {
-        border-radius: 16px;
-      }
-
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      th {
-        display: none;
-      }
-
-      tr {
-        margin: 0.5rem 1rem;
-        padding: 0.8rem;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-      }
-
-      td {
-        display: flex;
-        align-items: center;
-        padding: 0.6rem 0.8rem;
-        border-bottom: none;
-      }
-
-      td:before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: var(--accent);
-        min-width: 70px;
-        margin-right: 10px;
-        font-size: 0.9rem;
-      }
+      h1 { font-size: 1.5rem; }
+      .controls { flex-direction: column; gap: 0.5rem; }
+      .search-input, .theme-toggle { width: 100%; }
+      .container { border-radius: 16px; }
+      th, td { padding: 0.7rem; }
     }
-
-    /* Subtle floating animation */
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-5px); }
-      100% { transform: translateY(0px); }
-    }
-
-    /* Particles */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-      opacity: 0.2;
-    }
-
-    .particle {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background: white;
-      border-radius: 50%;
-      animation: float 6s infinite ease-in-out;
-    }
-
-    .light-mode .particle {
-      background: #555;
-    }
-
-    .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-    .particle:nth-child(2) { top: 40%; left: 20%; animation-delay: 2s; }
-    .particle:nth-child(3) { top: 60%; left: 80%; animation-delay: 4s; }
-    .particle:nth-child(4) { top: 30%; left: 60%; animation-delay: 1s; }
-    .particle:nth-child(5) { top: 70%; left: 40%; animation-delay: 3s; }
   </style>
 </head>
 <body>
 
-  <!-- Background Particles -->
-  <div class="particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-  </div>
-
-  <!-- Header with Controls -->
+  <!-- Header -->
   <header>
     <h1>📘 Liquid Glass Reading Tracker</h1>
     <div class="controls">
       <input type="text" class="search-input" placeholder="Search books..." id="searchInput">
-      <button class="theme-toggle" id="themeToggle">🌙 Light Mode</button>
+      <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
     </div>
   </header>
 
-  <div class="glass-container">
+  <!-- Main Container -->
+  <div class="container">
     <table id="bookTable">
       <thead>
         <tr>
-          <th>✅</th>
+          <th><span style="color: #10b981;">✓</span></th>
           <th>Title</th>
           <th>Author</th>
           <th>📄 Pages</th>
@@ -401,18 +271,17 @@
         </tr>
       </thead>
       <tbody id="bookList">
-        <!-- Books will be loaded from localStorage or defaults -->
+        <!-- Books will be loaded here -->
       </tbody>
     </table>
   </div>
 
   <script>
-    // === DOM Elements ===
     const bookList = document.getElementById('bookList');
     const searchInput = document.getElementById('searchInput');
     const themeToggle = document.getElementById('themeToggle');
 
-    // === Sample Books (Default Data) ===
+    // Default books
     const defaultBooks = [
       { title: "To Kill a Mockingbird", author: "Harper Lee", pages: "~320", checked: false, rating: 0, notes: "" },
       { title: "1984", author: "George Orwell", pages: "~328", checked: false, rating: 0, notes: "" },
@@ -426,20 +295,19 @@
       { title: "The Metamorphosis", author: "Franz Kafka", pages: "~55", checked: false, rating: 0, notes: "" }
     ];
 
-    // === Load Books from localStorage or use defaults ===
+    // Load from localStorage or defaults
     function loadBooks() {
-      const saved = localStorage.getItem('readingTrackerBooks');
-      return saved ? JSON.parse(saved) : defaultBooks;
+      return localStorage.getItem('readingTrackerBooks') ? JSON.parse(localStorage.getItem('readingTrackerBooks')) : defaultBooks;
     }
 
     let books = loadBooks();
 
-    // === Save to localStorage ===
+    // Save to localStorage
     function saveBooks() {
       localStorage.setItem('readingTrackerBooks', JSON.stringify(books));
     }
 
-    // === Render Books ===
+    // Render books
     function renderBooks(filter = '') {
       bookList.innerHTML = '';
       const filteredBooks = books.filter(book =>
@@ -449,16 +317,15 @@
 
       filteredBooks.forEach((book, index) => {
         const tr = document.createElement('tr');
-        if (!filteredBooks.includes(book)) tr.classList.add('hidden');
 
         tr.innerHTML = `
-          <td class="checkbox-container">
-            <input type="checkbox" ${book.checked ? 'checked' : ''} data-index="${index}" class="book-checkbox">
+          <td>
+            <div class="checkbox-container" data-index="${index}"></div>
           </td>
-          <td data-label="Title">${book.title}</td>
-          <td data-label="Author">${book.author}</td>
-          <td data-label="Pages">${book.pages}</td>
-          <td data-label="Rating">
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td class="pages">${book.pages}</td>
+          <td>
             <div class="rating" data-index="${index}">
               <input type="radio" name="r${index}" id="r${index}-1"><label for="r${index}-1">★</label>
               <input type="radio" name="r${index}" id="r${index}-2"><label for="r${index}-2">★</label>
@@ -467,70 +334,70 @@
               <input type="radio" name="r${index}" id="r${index}-5"><label for="r${index}-5">★</label>
             </div>
           </td>
-          <td data-label="Notes">
+          <td>
             <textarea rows="1" placeholder="Thoughts on the book..." data-index="${index}">${book.notes}</textarea>
           </td>
         `;
+
         bookList.appendChild(tr);
 
-        // Set rating
+        // Checkbox
+        const checkbox = tr.querySelector('.checkbox-container');
+        checkbox.addEventListener('click', () => {
+          books[index].checked = !books[index].checked;
+          checkbox.classList.toggle('checked');
+          saveBooks();
+        });
+
+        if (book.checked) checkbox.classList.add('checked');
+
+        // Rating
         const ratingInputs = tr.querySelectorAll(`#r${index}-1, #r${index}-2, #r${index}-3, #r${index}-4, #r${index}-5`);
         ratingInputs.forEach((input, i) => {
           if (i < book.rating) input.checked = true;
         });
 
-        // Add event listeners
-        tr.querySelector('.book-checkbox').addEventListener('change', (e) => {
-          books[index].checked = e.target.checked;
-          saveBooks();
-        });
-
-        tr.querySelectorAll(`#r${index}-1, #r${index}-2, #r${index}-3, #r${index}-4, #r${index}-5`).forEach((input, i) => {
+        ratingInputs.forEach(input => {
           input.addEventListener('change', () => {
-            books[index].rating = i + 1;
+            books[index].rating = parseInt(input.id.split('-')[1]);
             saveBooks();
           });
         });
 
-        tr.querySelector('textarea').addEventListener('input', (e) => {
-          books[index].notes = e.target.value;
+        // Notes
+        const textarea = tr.querySelector('textarea');
+        textarea.addEventListener('input', () => {
+          books[index].notes = textarea.value;
           saveBooks();
         });
       });
     }
 
-    // === Search Filter ===
+    // Search
     searchInput.addEventListener('input', () => {
       renderBooks(searchInput.value.trim());
     });
 
-    // === Theme Toggle ===
+    // Theme Toggle
     themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      if (document.body.classList.contains('light-mode')) {
-        themeToggle.textContent = '☀️ Dark Mode';
-        themeToggle.style.backgroundColor = '#6a3a9a';
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        themeToggle.textContent = '☀️ Light Mode';
       } else {
-        themeToggle.textContent = '🌙 Light Mode';
-        themeToggle.style.backgroundColor = '';
+        themeToggle.textContent = '🌙 Dark Mode';
       }
-      // Save preference
-      localStorage.setItem('readingTrackerTheme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     });
 
-    // === Load Saved Theme ===
-    function loadTheme() {
-      const savedTheme = localStorage.getItem('readingTrackerTheme');
-      if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        themeToggle.textContent = '☀️ Dark Mode';
-      }
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+      themeToggle.textContent = '☀️ Light Mode';
     }
 
-    // === Initialize ===
-    loadTheme();
+    // Initial render
     renderBooks();
-
   </script>
 </body>
 </html>
