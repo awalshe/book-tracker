@@ -4,99 +4,392 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Liquid Glass Reading Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Base styles */
+    /* Theme Variables */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #12092a, #3a1d6b, #6a3a9a, #928dab);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-hover: rgba(255, 255, 255, 0.15);
+      --text: #ffffff;
+      --accent: #bb86fc;
+      --star-full: #fbbf24;
+      --star-empty: rgba(255, 255, 255, 0.4);
+      --border-light: rgba(255, 255, 255, 0.1);
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      --transition: all 0.3s ease;
+      --input-bg: rgba(255, 255, 255, 0.1);
+      --header-bg: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Light Mode Theme */
+    .light-mode {
+      --bg-gradient: linear-gradient(135deg, #f0f4f8, #d9e2ec, #e4d5f0);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-hover: rgba(255, 255, 255, 0.85);
+      --text: #222;
+      --accent: #6a3a9a;
+      --star-full: #eab308;
+      --star-empty: #ccc;
+      --border-light: rgba(0, 0, 0, 0.1);
+      --input-bg: rgba(0, 0, 0, 0.05);
+      --header-bg: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
       min-height: 100vh;
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #fff;
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.5s ease;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Title & Controls */
+    header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     h1 {
-      margin-bottom: 1rem;
-      font-size: 2rem;
-      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, var(--accent), #e4d5f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 0.6rem 1rem;
+      width: 200px;
+      max-width: 100%;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      background: var(--input-bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .theme-toggle {
+      background: var(--accent);
+      color: #121212;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+    }
+
+    /* Main Container */
     .glass-container {
       width: 100%;
       max-width: 1200px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
+      background: var(--glass-bg);
+      border-radius: 24px;
       backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow);
       overflow: hidden;
-      padding: 1rem;
+      padding: 0;
+      transition: var(--transition);
+    }
+
+    .glass-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      color: #fff;
-    }
-
-    th, td {
-      padding: 0.75rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: left;
+      color: var(--text);
     }
 
     th {
-      background: rgba(255, 255, 255, 0.15);
+      padding: 1rem;
+      text-align: left;
       font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent);
+      background: var(--header-bg);
+      backdrop-filter: blur(5px);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-light);
+      transition: var(--transition);
+    }
+
+    tr {
+      opacity: 1;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    tr.hidden {
+      opacity: 0;
+      transform: translateY(-10px);
+      height: 0;
+      padding: 0;
+      border: none;
+      display: none;
+    }
+
+    tr:hover:not(.hidden) {
+      background: rgba(255, 255, 255, 0.05);
+      transform: scale(1.005);
+    }
+
+    /* Checkbox Styling */
+    .checkbox-container {
+      display: flex;
+      justify-content: center;
     }
 
     input[type="checkbox"] {
-      transform: scale(1.2);
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 2px solid var(--accent);
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
     }
 
+    input[type="checkbox"]:checked {
+      background: var(--accent);
+    }
+
+    input[type="checkbox"]:after {
+      content: "✓";
+      position: absolute;
+      color: #121212;
+      font-weight: bold;
+      font-size: 14px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+    }
+
+    input[type="checkbox"]:checked:after {
+      opacity: 1;
+    }
+
+    /* Star Rating */
+    .rating {
+      display: flex;
+      gap: 4px;
+    }
+
+    .rating input {
+      display: none;
+    }
+
+    .rating label {
+      font-size: 1.3rem;
+      color: var(--star-empty);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .rating label:hover,
+    .rating label:hover ~ label,
+    .rating input:checked ~ label {
+      color: var(--star-full);
+    }
+
+    /* Input Fields */
     input[type="number"] {
       width: 60px;
-      padding: 0.25rem;
-      border-radius: 5px;
-      border: none;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background: var(--input-bg);
+      color: var(--text);
+      text-align: center;
+      font-size: 0.95rem;
     }
 
     textarea {
       width: 100%;
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      padding: 0.5rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 0.6rem;
       resize: vertical;
+      min-height: 40px;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.3);
     }
 
     ::placeholder {
-      color: #ccc;
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-input, .theme-toggle {
+        width: 100%;
+      }
+
+      .glass-container {
+        border-radius: 16px;
+      }
+
       table, thead, tbody, th, td, tr {
         display: block;
       }
+
       th {
-        position: sticky;
-        top: 0;
+        display: none;
       }
+
+      tr {
+        margin: 0.5rem 1rem;
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+      }
+
       td {
-        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 0.8rem;
+        border-bottom: none;
+      }
+
+      td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--accent);
+        min-width: 70px;
+        margin-right: 10px;
+        font-size: 0.9rem;
       }
     }
+
+    /* Subtle floating animation */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.2;
+    }
+
+    .particle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: white;
+      border-radius: 50%;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .light-mode .particle {
+      background: #555;
+    }
+
+    .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 40%; left: 20%; animation-delay: 2s; }
+    .particle:nth-child(3) { top: 60%; left: 80%; animation-delay: 4s; }
+    .particle:nth-child(4) { top: 30%; left: 60%; animation-delay: 1s; }
+    .particle:nth-child(5) { top: 70%; left: 40%; animation-delay: 3s; }
   </style>
 </head>
 <body>
-  <h1>📘 Liquid Glass Reading Tracker</h1>
+
+  <!-- Background Particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Header with Controls -->
+  <header>
+    <h1>📘 Liquid Glass Reading Tracker</h1>
+    <div class="controls">
+      <input type="text" class="search-input" placeholder="Search books..." id="searchInput">
+      <button class="theme-toggle" id="themeToggle">🌙 Light Mode</button>
+    </div>
+  </header>
+
   <div class="glass-container">
-    <table>
+    <table id="bookTable">
       <thead>
         <tr>
           <th>✅</th>
@@ -107,44 +400,137 @@
           <th>📝 Notes</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Paste your 50 book rows here -->
-        <tr><td><input type="checkbox" /></td><td>To Kill a Mockingbird</td><td>Harper Lee</td><td>~320</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2" placeholder="Thoughts..."></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>1984</td><td>George Orwell</td><td>~328</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2" placeholder="Thoughts..."></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Pride and Prejudice</td><td>Jane Austen</td><td>~432</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2" placeholder="Thoughts..."></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Little Prince</td><td>Antoine de Saint-Exupéry</td><td>~96</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Animal Farm</td><td>George Orwell</td><td>~112</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Road</td><td>Cormac McCarthy</td><td>~287</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Bell Jar</td><td>Sylvia Plath</td><td>~244</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Old Man and the Sea</td><td>Ernest Hemingway</td><td>~127</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Of Mice and Men</td><td>John Steinbeck</td><td>~107</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Metamorphosis</td><td>Franz Kafka</td><td>~55</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Siddhartha</td><td>Hermann Hesse</td><td>~152</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Kite Runner</td><td>Khaled Hosseini</td><td>~371</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Color Purple</td><td>Alice Walker</td><td>~295</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Norwegian Wood</td><td>Haruki Murakami</td><td>~296</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Remains of the Day</td><td>Kazuo Ishiguro</td><td>~258</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Secret History</td><td>Donna Tartt</td><td>~576</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Master and Margarita</td><td>Mikhail Bulgakov</td><td>~384</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Handmaid’s Tale</td><td>Margaret Atwood</td><td>~311</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Things Fall Apart</td><td>Chinua Achebe</td><td>~209</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Life of Pi</td><td>Yann Martel</td><td>~319</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Book Thief</td><td>Markus Zusak</td><td>~552</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Frankenstein</td><td>Mary Shelley</td><td>~280</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Dracula</td><td>Bram Stoker</td><td>~418</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Wuthering Heights</td><td>Emily Brontë</td><td>~416</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Jane Eyre</td><td>Charlotte Brontë</td><td>~532</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>A Clockwork Orange</td><td>Anthony Burgess</td><td>~213</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Sun Also Rises</td><td>Ernest Hemingway</td><td>~251</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Picture of Dorian Gray</td><td>Oscar Wilde</td><td>~254</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Death of Ivan Ilyich</td><td>Leo Tolstoy</td><td>~86</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Tao Te Ching</td><td>Laozi</td><td>~81</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>Man’s Search for Meaning</td><td>Viktor Frankl</td><td>~165</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>The Prophet</td><td>Kahlil Gibran</td><td>~96</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <tr><td><input type="checkbox" /></td><td>A Tale of Two Cities</td><td>Charles Dickens</td><td>~489</td><td><input type="number" min="1" max="5" /></td><td><textarea rows="2"></textarea></td></tr>
-        <!-- Continue with the rest of your list -->
+      <tbody id="bookList">
+        <!-- Books will be loaded from localStorage or defaults -->
       </tbody>
     </table>
   </div>
+
+  <script>
+    // === DOM Elements ===
+    const bookList = document.getElementById('bookList');
+    const searchInput = document.getElementById('searchInput');
+    const themeToggle = document.getElementById('themeToggle');
+
+    // === Sample Books (Default Data) ===
+    const defaultBooks = [
+      { title: "To Kill a Mockingbird", author: "Harper Lee", pages: "~320", checked: false, rating: 0, notes: "" },
+      { title: "1984", author: "George Orwell", pages: "~328", checked: false, rating: 0, notes: "" },
+      { title: "Pride and Prejudice", author: "Jane Austen", pages: "~432", checked: false, rating: 0, notes: "" },
+      { title: "The Little Prince", author: "Antoine de Saint-Exupéry", pages: "~96", checked: false, rating: 0, notes: "" },
+      { title: "Animal Farm", author: "George Orwell", pages: "~112", checked: false, rating: 0, notes: "" },
+      { title: "The Road", author: "Cormac McCarthy", pages: "~287", checked: false, rating: 0, notes: "" },
+      { title: "The Bell Jar", author: "Sylvia Plath", pages: "~244", checked: false, rating: 0, notes: "" },
+      { title: "The Old Man and the Sea", author: "Ernest Hemingway", pages: "~127", checked: false, rating: 0, notes: "" },
+      { title: "Of Mice and Men", author: "John Steinbeck", pages: "~107", checked: false, rating: 0, notes: "" },
+      { title: "The Metamorphosis", author: "Franz Kafka", pages: "~55", checked: false, rating: 0, notes: "" }
+    ];
+
+    // === Load Books from localStorage or use defaults ===
+    function loadBooks() {
+      const saved = localStorage.getItem('readingTrackerBooks');
+      return saved ? JSON.parse(saved) : defaultBooks;
+    }
+
+    let books = loadBooks();
+
+    // === Save to localStorage ===
+    function saveBooks() {
+      localStorage.setItem('readingTrackerBooks', JSON.stringify(books));
+    }
+
+    // === Render Books ===
+    function renderBooks(filter = '') {
+      bookList.innerHTML = '';
+      const filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(filter.toLowerCase()) ||
+        book.author.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      filteredBooks.forEach((book, index) => {
+        const tr = document.createElement('tr');
+        if (!filteredBooks.includes(book)) tr.classList.add('hidden');
+
+        tr.innerHTML = `
+          <td class="checkbox-container">
+            <input type="checkbox" ${book.checked ? 'checked' : ''} data-index="${index}" class="book-checkbox">
+          </td>
+          <td data-label="Title">${book.title}</td>
+          <td data-label="Author">${book.author}</td>
+          <td data-label="Pages">${book.pages}</td>
+          <td data-label="Rating">
+            <div class="rating" data-index="${index}">
+              <input type="radio" name="r${index}" id="r${index}-1"><label for="r${index}-1">★</label>
+              <input type="radio" name="r${index}" id="r${index}-2"><label for="r${index}-2">★</label>
+              <input type="radio" name="r${index}" id="r${index}-3"><label for="r${index}-3">★</label>
+              <input type="radio" name="r${index}" id="r${index}-4"><label for="r${index}-4">★</label>
+              <input type="radio" name="r${index}" id="r${index}-5"><label for="r${index}-5">★</label>
+            </div>
+          </td>
+          <td data-label="Notes">
+            <textarea rows="1" placeholder="Thoughts on the book..." data-index="${index}">${book.notes}</textarea>
+          </td>
+        `;
+        bookList.appendChild(tr);
+
+        // Set rating
+        const ratingInputs = tr.querySelectorAll(`#r${index}-1, #r${index}-2, #r${index}-3, #r${index}-4, #r${index}-5`);
+        ratingInputs.forEach((input, i) => {
+          if (i < book.rating) input.checked = true;
+        });
+
+        // Add event listeners
+        tr.querySelector('.book-checkbox').addEventListener('change', (e) => {
+          books[index].checked = e.target.checked;
+          saveBooks();
+        });
+
+        tr.querySelectorAll(`#r${index}-1, #r${index}-2, #r${index}-3, #r${index}-4, #r${index}-5`).forEach((input, i) => {
+          input.addEventListener('change', () => {
+            books[index].rating = i + 1;
+            saveBooks();
+          });
+        });
+
+        tr.querySelector('textarea').addEventListener('input', (e) => {
+          books[index].notes = e.target.value;
+          saveBooks();
+        });
+      });
+    }
+
+    // === Search Filter ===
+    searchInput.addEventListener('input', () => {
+      renderBooks(searchInput.value.trim());
+    });
+
+    // === Theme Toggle ===
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      if (document.body.classList.contains('light-mode')) {
+        themeToggle.textContent = '☀️ Dark Mode';
+        themeToggle.style.backgroundColor = '#6a3a9a';
+      } else {
+        themeToggle.textContent = '🌙 Light Mode';
+        themeToggle.style.backgroundColor = '';
+      }
+      // Save preference
+      localStorage.setItem('readingTrackerTheme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    });
+
+    // === Load Saved Theme ===
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('readingTrackerTheme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = '☀️ Dark Mode';
+      }
+    }
+
+    // === Initialize ===
+    loadTheme();
+    renderBooks();
+
+  </script>
 </body>
 </html>
